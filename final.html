@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GROOKFIT. - Printed T-Shirt E-Commerce Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        flipkartBlue: '#2874f0',
+                        flipkartYellow: '#ff9f00',
+                        brandDark: '#172337',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col pb-16 md:pb-0">
+
+    <!-- Top Header -->
+    <header class="bg-flipkartBlue text-white sticky top-0 z-45 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button onclick="switchView('home')" class="flex flex-col text-left focus:outline-none">
+                    <span class="text-2xl font-black tracking-wider italic flex items-center gap-0.5 leading-none">
+                        GROOKFIT<span class="text-flipkartYellow">.</span>
+                    </span>
+                    <span class="text-[9px] font-bold tracking-widest text-flipkartYellow uppercase mt-0.5">MOVE.WEAR.LIVE</span>
+                </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-xl mx-4 hidden sm:block">
+                <div class="relative">
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search for devotional, street style, cinema, GenZ, kids..." class="w-full py-2 pl-4 pr-10 rounded text-gray-900 text-sm focus:outline-none shadow-inner" />
+                    <button class="absolute right-3 top-2.5 text-flipkartBlue"><i data-lucide="search" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+
+            <!-- Desktop Header Navigation & Actions -->
+            <div class="hidden md:flex items-center space-x-6 font-medium text-sm">
+                <button onclick="switchView('studio')" class="flex items-center gap-1 hover:text-flipkartYellow text-flipkartYellow font-bold">
+                    <i data-lucide="pen-tool" class="w-5 h-5"></i> Custom Studio
+                </button>
+                <button onclick="switchView('wishlist')" class="flex items-center gap-1 hover:text-flipkartYellow relative">
+                    <i data-lucide="heart" class="w-5 h-5"></i> Wishlist
+                    <span id="wishlistCountDesktop" class="absolute -top-2 -right-3 bg-flipkartYellow text-black text-xs px-1.5 py-0.5 rounded-full font-bold">0</span>
+                </button>
+                <button onclick="openCart()" class="flex items-center gap-1 hover:text-flipkartYellow relative">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i> Cart
+                    <span id="cartCountDesktop" class="absolute -top-2 -right-3 bg-flipkartYellow text-black text-xs px-1.5 py-0.5 rounded-full font-bold">0</span>
+                </button>
+                <button onclick="switchView('orders')" class="flex items-center gap-1 hover:text-flipkartYellow">
+                    <i data-lucide="package" class="w-5 h-5"></i> Orders
+                </button>
+                <!-- Desktop Account Dropdown -->
+                <div class="relative group">
+                    <button id="desktopAccountBtn" class="bg-white text-flipkartBlue px-4 py-1.5 rounded font-semibold hover:bg-gray-100 transition flex items-center gap-1">
+                        <i data-lucide="user" class="w-4 h-4"></i> <span id="desktopAccountName">Login</span>
+                    </button>
+                    <div class="absolute right-0 mt-0 w-52 bg-white border rounded shadow-lg hidden group-hover:block text-gray-800 py-1 z-50">
+                        <button onclick="checkAuthAndNavigate('profile')" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i> My Profile & Edit</button>
+                        <button onclick="checkAuthAndNavigate('orders')" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs flex items-center gap-2"><i data-lucide="package" class="w-4 h-4"></i> My Orders & Tracking</button>
+                        <button onclick="checkAuthAndNavigate('addresses')" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Saved Addresses</button>
+                        <button onclick="checkAuthAndNavigate('settings')" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs flex items-center gap-2"><i data-lucide="settings" class="w-4 h-4"></i> Language & Security</button>
+                        <div id="desktopAuthActionDropdown" class="border-t mt-1 pt-1">
+                            <button onclick="openLoginModal()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs font-bold text-flipkartBlue">Login / Register</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+               <!-- <button id="adminNavBtn" onclick="switchView('admin')" class="hidden bg-amber-500 text-black px-3 py-1 rounded font-bold hover:bg-amber-400 transition text-xs">Admin</button>  -->
+            </div>
+        </div>
+        <!-- Mobile Search Bar -->
+        <div class="px-4 pb-3 sm:hidden">
+            <input type="text" oninput="handleSearch(this.value)" placeholder="Search products..." class="w-full py-1.5 px-3 rounded text-gray-900 text-sm focus:outline-none" />
+        </div>
+    </header>
+
+    <!-- Mobile Fixed Bottom Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center h-14 z-50 shadow-lg text-gray-600">
+        <button onclick="switchView('home')" class="flex flex-col items-center justify-center flex-1 py-1 hover:text-flipkartBlue">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5">Home</span>
+        </button>
+        <button onclick="switchView('categories')" class="flex flex-col items-center justify-center flex-1 py-1 hover:text-flipkartBlue">
+            <i data-lucide="grid" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5">Categories</span>
+        </button>
+        <button onclick="switchView('studio')" class="flex flex-col items-center justify-center flex-1 py-1 text-flipkartBlue font-bold">
+            <i data-lucide="pen-tool" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5">Studio</span>
+        </button>
+        <button onclick="openCart()" class="flex flex-col items-center justify-center flex-1 py-1 hover:text-flipkartBlue relative">
+            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5">Cart</span>
+            <span id="cartCountMobile" class="absolute top-1 right-3 bg-flipkartYellow text-black text-[10px] px-1 rounded-full font-bold">0</span>
+        </button>
+        <button onclick="checkAuthAndNavigate('profile')" class="flex flex-col items-center justify-center flex-1 py-1 hover:text-flipkartBlue">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5">Profile</span>
+        </button>
+    </nav>
+
+    <!-- Main Dynamic Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full" id="mainContainer">
+        <!-- Injected via JavaScript -->
+    </main>
+
+    <!-- Cart Drawer Modal -->
+    <div id="cartDrawer" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
+        <div class="bg-white w-full max-w-md h-full flex flex-col shadow-xl">
+            <div class="p-4 bg-flipkartBlue text-white flex justify-between items-center">
+                <h2 class="font-bold text-lg">My Shopping Cart</h2>
+                <button onclick="closeCart()" class="text-white hover:text-gray-200"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+            <div class="p-4 border-t bg-gray-50 space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">₹0</span>
+                </div>
+                <div class="flex justify-between text-base font-bold">
+                    <span>Total Payable:</span>
+                    <span id="cartTotal">₹0</span>
+                </div>
+                <button onclick="proceedToCheckout()" class="w-full bg-flipkartYellow hover:bg-amber-500 text-black font-bold py-3 rounded shadow transition">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login / Registration Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-sm w-full p-6 relative shadow-xl">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h2 class="text-xl font-bold text-flipkartBlue mb-1" id="loginModalTitle">Mobile Login / Register</h2>
+            <p class="text-xs text-gray-500 mb-4">Secure mobile number authentication.</p>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div id="nameFieldContainer" class="hidden">
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Full Name</label>
+                    <input type="text" id="authName" placeholder="Enter your name" class="w-full px-3 py-2 border rounded text-sm focus:outline-none focus:border-flipkartBlue" />
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Mobile Number</label>
+                    <input type="tel" id="authMobile" required placeholder="10-digit mobile number" maxlength="10" class="w-full px-3 py-2 border rounded text-sm focus:outline-none focus:border-flipkartBlue" />
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Password</label>
+                    <input type="password" id="authPassword" required placeholder="Enter password (min 6 chars)" class="w-full px-3 py-2 border rounded text-sm focus:outline-none focus:border-flipkartBlue" />
+                </div>
+                <button type="submit" id="authSubmitBtn" class="w-full bg-flipkartBlue text-white font-semibold py-2 rounded text-sm hover:bg-blue-600 transition">Login</button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="toggleAuthMode()" class="text-xs text-flipkartBlue hover:underline" id="authSwitchText">New to Grookfit? Create an account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brandDark text-gray-300 py-10 mt-16 text-sm mb-12 md:mb-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-white font-bold text-lg mb-3">ABOUT</h3>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-3">POLICY</h3>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-white">Return Policy</a></li>
+                    <li><a href="#" class="hover:text-white">Terms of Use</a></li>
+                    <li><a href="#" class="hover:text-white">Security & Privacy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-3">SOCIAL</h3>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-white">Facebook</a></li>
+                    <li><a href="#" class="hover:text-white">Instagram</a></li>
+                    <li><a href="#" class="hover:text-white">Twitter / X</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-3">Registered Office</h3>
+                <p class="text-gray-400 text-xs">Grookfit Apparel E-Commerce Pvt Ltd,<br>HITEC City, Hyderabad & Chennai, India.</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-800 mt-8 pt-6 text-center text-xs text-gray-500">
+            © 2026 Grookfit Printed T-Shirt Store. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Full Application Script -->
+    <script>
+        // Expanded Database State with 24 Unique Category-Wise Products
+        let products = [
+            // 1. DEVOTIONAL CATEGORY (4 Products)
+            { id: 1, title: 'Lord Shiva Trishul Minimalist Cotton Tee', category: 'Devotional', fit: 'RegularFit', gender: 'Male', price: 549, origPrice: 1299, discount: 57, rating: 4.8, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-uUI-lWcZM_ASVQMeMN-N2ftiPlhaaLxVBq40-6Opzw&s', description: 'Premium cotton bio-washed tee with subtle minimalist Trishul print.', designStory: 'Represents divine cosmic energy and inner peace.', fabric: '100% Ring-Spun Cotton, 180 GSM', sizes: ['S', 'M', 'L', 'XL'], colors: ['White', 'Navy Blue'], stock: 20 },
+            { id: 2, title: 'Divine Lord Rama Dhanush Graphic Tee', category: 'Devotional', fit: 'RegularFit', gender: 'Unisex', price: 499, origPrice: 999, discount: 50, rating: 4.9, image: 'data:image/jpeg;base64,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', description: 'Golden bow and arrow graphic artwork printed on pure breathable cotton.', designStory: 'Symbolizes righteousness, focus, and victory over evil.', fabric: '100% Cotton, 200 GSM', sizes: ['M', 'L', 'XL', 'XXL'], colors: ['Maroon', 'Black'], stock: 18 },
+            { id: 3, title: 'Hanumanji Mahabali Power Typography Tee', category: 'Devotional', fit: 'Oversized', gender: 'Male', price: 599, origPrice: 1199, discount: 50, rating: 4.7, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXz3OfDvFQoO--EaEbmI5PWn3pSdT2cD4i2lKCPEf4oA&s=10', designStory: 'Strength, devotion, and supreme protection.', fabric: '240 GSM Combed Cotton', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['Mustard', 'Charcoal'], stock: 14 },
+            { id: 4, title: 'Ganesha Minimalist Om Calligraphy Tee', category: 'Devotional', fit: 'RegularFit', gender: 'Female', price: 449, origPrice: 899, discount: 50, rating: 4.8, image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQdZOkgCmS3n-T9nQvbfzDR2PuoeHqw1d8CM-0NoEjzU3rBdeG0r9zdPnrZ4cxtrx4H8-4sBZ28aPFnfaNX65-acTJccNsNB_DxxSOmUrz_PH1hIn-P5_b8ufqWkYFseFvKY9MXbMk&usqp=CAc', description: 'Aesthetic Lord Ganesha line art tee in soft pastel hues.', designStory: 'Lord of new beginnings and wisdom.', fabric: 'Super Soft Bio-Washed Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['White', 'Pastel Yellow'], stock: 25 },
+
+            // 2. STREET STYLE CATEGORY (4 Products)
+            { id: 5, title: 'Cyberpunk Oni Mask Oversized T-Shirt', category: 'Street Style', fit: 'Oversized', gender: 'Unisex', price: 699, origPrice: 1499, discount: 53, rating: 4.6, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5DY03Xu-AU8xSTKX5J1yz3bgWcHT0eS88MthrQPFzPQ&s', description: 'Heavyweight 240 GSM pure cotton oversized t-shirt featuring cyberpunk street art graphics.', designStory: 'Inspired by neon-lit dystopian Tokyo alleys.', fabric: '100% Combed Cotton, 240 GSM', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['Black', 'Charcoal'], stock: 15 },
+            { id: 6, title: 'Tokyo Underground Streetwear Heavy Tee', category: 'Street Style', fit: 'Oversized', gender: 'Unisex', price: 749, origPrice: 1599, discount: 53, rating: 4.9, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsCRlQdXJbMgMDXaRyP1T-HE5dU4SGiJK7iLbNBHDKLw&s=10', description: 'Boxy fit streetwear t-shirt with grunge Japanese typography back drop.', designStory: 'Urban night culture and skate deck aesthetics.', fabric: '250 GSM Heavy Terry Cotton', sizes: ['M', 'L', 'XL', 'XXL'], colors: ['Acid Wash Grey', 'Black'], stock: 10 },
+            { id: 7, title: 'Graffiti Spray Wall Art Drop-Shoulder Tee', category: 'Street Style', fit: 'Oversized', gender: 'Male', price: 649, origPrice: 1399, discount: 53, rating: 4.5, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFKXYJXs1uL--NWVPRcwMECEAmvOoX4kISKbWwF36bw&s=10', description: 'Vibrant neon spray print t-shirt built for hip-hop and dance enthusiasts.', designStory: 'Metropolitan street walls and wildstyle graffiti art.', fabric: '100% Premium Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Off White'], stock: 16 },
+            { id: 8, title: 'Abstract Gothic Skeleton Street Tee', category: 'Street Style', fit: 'RegularFit', gender: 'Unisex', price: 529, origPrice: 1099, discount: 51, rating: 4.4, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXxU-aGMFtwd4hBn3H7dVLn3NILFDLScsQxH7p62IQSA&s=10', description: 'Minimalist gothic line graphic printed with eco-friendly discharge inks.', designStory: 'Edgy underground aesthetic.', fabric: 'Ring-Spun Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Black'], stock: 22 },
+
+            // 3. CINEMA & TELUGU CULTURE CATEGORY (3 Products)
+            { id: 9, title: 'Telugu Typography "Mandharam" Aesthetic Tee', category: 'Cinema & Telugu', fit: 'RegularFit', gender: 'Female', price: 599, origPrice: 999, discount: 40, rating: 4.5, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXDLk1A43PfoR6eqajU-Kg2cFgp3jrOJrWvkMAbaVXhQ&s=10', description: 'Express cultural roots with artistic Telugu typography printed on comfortable combed cotton.', designStory: 'Celebrating classical Telugu literature and floral elegance.', fabric: '100% Cotton Bio-Washed', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['Maroon', 'Mustard Yellow'], stock: 8 },
+            { id: 10, title: 'Tollywood Mass Dialogue Action Hero Tee', category: 'Cinema & Telugu', fit: 'Oversized', gender: 'Male', price: 629, origPrice: 1299, discount: 51, rating: 4.8, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9j0LD5Ijg8TLnIOva3g-x67QhWLCeqd_2mWcf9Suleg&s', description: 'High-energy movie poster stencil design with classic cinema quotes.', designStory: 'Dedicated to pure single-screen cinematic mass madness.', fabric: '220 GSM Cotton', sizes: ['M', 'L', 'XL', 'XXL'], colors: ['Black', 'Red'], stock: 19 },
+            { id: 11, title: 'Retro Vintage Film Reel & Camera Tee', category: 'Cinema & Telugu', fit: 'RegularFit', gender: 'Unisex', price: 499, origPrice: 1099, discount: 54, rating: 4.6, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFFBjzZuGQ_G9P_MUqTB96e4W9pnbRkq2fK1QyVBpKxA&s=10', description: 'Classic 35mm film roll print for movie directors and cinephiles.', designStory: 'Golden era of analog celluloid filmmaking.', fabric: '100% Bio Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Charcoal Grey'], stock: 12 },
+            { id: 25, title: 'Jai balayya Aesthetic Tee', category: 'Cinema & Telugu', fit: 'RegularFit', gender: 'Bisex', price: 599, origPrice: 999, discount: 40, rating: 4.5, image: 'https://boldanditalic.in/cdn/shop/files/Balayya_Website-Hero_c1c61c5c-f7b2-4c7a-91e1-a394686ce933.png?v=1761308920', description: 'Express cultural roots with artistic Telugu typography printed on comfortable combed cotton.', designStory: 'Celebrating classical Telugu literature and floral elegance.', fabric: '100% Cotton Bio-Washed', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['Maroon', 'Mustard Yellow'], stock: 8 },
+
+            // 4. GENZ & ANIME CATEGORY (4 Products)
+            { id: 12, title: 'Anime Ronin Samurai Streetwear Hoodie/Tee', category: 'GenZ & Anime', fit: 'Oversized', gender: 'Male', price: 749, origPrice: 1599, discount: 53, rating: 4.9, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVRCMHRukDzi5H2yfvB7Afk7SNMZJ6zMr6_R7mOIm--Q&s=10', description: 'Detailed Japanese Ronin Samurai artwork printed with eco-friendly discharge inks.', designStory: 'Artistic tribute to wandering masterless samurai warriors.', fabric: 'Heavyweight Cotton', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['White', 'Black'], stock: 5 },
+            { id: 13, title: 'Aesthetic Cybergirl Manga Panel Tee', category: 'GenZ & Anime', fit: 'Oversized', gender: 'Female', price: 689, origPrice: 1399, discount: 50, rating: 4.7, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDtFZfVB9eAbaeMU1iFv15ZY48Z7-ubbRtI3jVt2gruw&s=10', description: 'Vibrant manga comic panel art printed on soft dropped-shoulder t-shirt.', designStory: 'Modern Japanese otaku pop culture.', fabric: '100% Combed Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Pastel Pink', 'White'], stock: 14 },
+            { id: 14, title: 'Main Character Energy Typography Tee', category: 'GenZ & Anime', fit: 'RegularFit', gender: 'Unisex', price: 499, origPrice: 999, discount: 50, rating: 4.5, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-S5Wpi48Jm4bZ3n_wOyZLW3RlIMQyrGfccRwrkkz9NQ&s', description: 'Minimalist GenZ slang typography t-shirt with back quote.', designStory: 'Confidence and main character vibes everywhere you go.', fabric: 'Bio-washed Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Black', 'Sage Green'], stock: 28 },
+            { id: 15, title: 'Neon Dragon Ball Power Mode Tee', category: 'GenZ & Anime', fit: 'Oversized', gender: 'Male', price: 699, origPrice: 1499, discount: 53, rating: 4.9, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBg5pUafMgFgdsGN-OgOcHNU7kSFleRHf6XSOS1Wjpvg&s=10', description: 'Electric aura graphic print inspired by ultimate anime Transformations.', designStory: 'Limitless power and battle spirit.', fabric: '240 GSM Terry Cotton', sizes: ['M', 'L', 'XL', 'XXL'], colors: ['Black'], stock: 11 },
+
+            // 5. KIDS SPECIAL CATEGORY (3 Products)
+            { id: 16, title: 'Cute Little Astronaut Space Explorer Kids Tee', category: 'Kids Special', fit: 'RegularFit', gender: 'Unisex', price: 399, origPrice: 799, discount: 50, rating: 4.9, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4nMY_3p8gJob9NbOgXaRA3PXSwyhk5suN_O_a4EMYvw&s=10', description: 'Hypoallergenic soft organic cotton tee for kids with space rocket print.', designStory: 'Inspirits curiosity and space adventure dreams.', fabric: '100% Organic Soft Cotton', sizes: ['S', 'M', 'L'], colors: ['Sky Blue', 'White'], stock: 25 },
+            { id: 17, title: 'Playful Cartoon Dino Squad Kids Tee', category: 'Kids Special', fit: 'RegularFit', gender: 'Unisex', price: 349, origPrice: 699, discount: 50, rating: 4.8, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpv3oAa_UcFVZQZUD6YmKXDgKES0gowUmoDlg8e3wlOg&s=10', description: 'Fun dinosaur graphics printed with safe non-toxic baby-friendly dyes.', designStory: 'Prehistoric fun and active playtime comfort.', fabric: '100% Premium Cotton', sizes: ['S', 'M', 'L'], colors: ['Yellow', 'Green'], stock: 30 },
+            { id: 18, title: 'Super Kid Hero Cape & Shield Printed Tee', category: 'Kids Special', fit: 'RegularFit', gender: 'Unisex', price: 379, origPrice: 749, discount: 49, rating: 4.7, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSGGHY1d8hlB6aAr-9VQKyKqP4sLMqUphPdd29h1I3aw&s=10', description: 'Bold superhero badge chest graphic for brave little champions.', designStory: 'Unleashing childhood imagination and everyday bravery.', fabric: 'Soft Breathable Cotton', sizes: ['S', 'M', 'L'], colors: ['Red', 'Navy Blue'], stock: 20 },
+
+            // 6. MUSIC & HIP-HOP CATEGORY (3 Products)
+            { id: 19, title: 'Vintage Retro Cassette Tape Music Tee', category: 'Music & Hip-Hop', fit: 'RegularFit', gender: 'Unisex', price: 499, origPrice: 1199, discount: 58, rating: 4.4, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV0ZKPeXEGigkzfKAOjyfBTwjvAT52nwXdJBP0rm1-hQ&s=10', description: 'Retro 80s cassette tape mixtape graphic for music lovers and hip-hop heads.', designStory: 'A nostalgic nod to golden era analog audio cassettes.', fabric: '100% Cotton', sizes: ['M', 'L', 'XL'], colors: ['Black', 'Grey'], stock: 12 },
+            { id: 20, title: 'Vinyl Record turntable Retro Beat Tee', category: 'Music & Hip-Hop', fit: 'Oversized', gender: 'Male', price: 649, origPrice: 1299, discount: 50, rating: 4.7, image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBQxYU15cOCZoPxIzjaAhnt5dVer9ihGLROPOFn_pQkQ&s=10', description: 'Classic gramophone and DJ turntable graphic printed on heavy cotton.', designStory: 'Soul, jazz, and analog boom-bap rhythm.', fabric: '220 GSM Bio Cotton', sizes: ['S', 'M', 'L', 'XL'], colors: ['Washed Black'], stock: 15 },
+            { id: 21, title: 'Acoustic Guitar Soul Strings Graphic Tee', category: 'Music & Hip-Hop', fit: 'RegularFit', gender: 'Female', price: 529, origPrice: 999, discount: 47, rating: 4.6, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS58hFxy25zSlMkQz5Qt6SESr_tSp3Ot46_tFM8BMv5LA&s=10', description: 'Artistic acoustic guitar line illustration in vintage earth tones.', designStory: 'For singers, songwriters, and acoustic harmony lovers.', fabric: '100% Combed Cotton', sizes: ['S', 'M', 'L'], colors: ['Beige', 'White'], stock: 18 },
+
+            // 7. GAMING CATEGORY (3 Products)
+            { id: 22, title: 'Gaming Glitch Controller Graphic Tee', category: 'Gaming', fit: 'RegularFit', gender: 'Unisex', price: 529, origPrice: 1099, discount: 51, rating: 4.3, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTar35a3APqy_QCwsappDlfv6A3Wfv8ZQEy1HEd1ur89w&s', description: 'Neon glitch aesthetic gamepad print built for hardcore gamers.', designStory: 'Modern cyberpunk gaming aesthetic with glitch color channels.', fabric: 'Cotton Blend', sizes: ['S', 'M', 'L', 'XL'], colors: ['Neon Black'], stock: 18 },
+            { id: 23, title: 'Pixel Arcade 8-Bit Retro Gaming Tee', category: 'Gaming', fit: 'RegularFit', gender: 'Unisex', price: 479, origPrice: 999, discount: 52, rating: 4.8, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkk7go4NwJhkJvWfPuhxAOwjN0Xamj0_xgWd2wCr64eg&s=10', description: 'Nostalgic 80s arcade machine pixel art graphic t-shirt.', designStory: 'Quarter insert coins and endless high score chases.', fabric: '100% Bio Cotton', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: ['Navy Blue'], stock: 22 },
+            { id: 24, title: 'Level Up Gamer Mode Status Tee', category: 'Gaming', fit: 'Oversized', gender: 'Male', price: 599, origPrice: 1199, discount: 50, rating: 4.6, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBg5pUafMgFgdsGN-OgOcHNU7kSFleRHf6XSOS1Wjpvg&s=10', description: 'Heavyweight drop shoulder tee with HUD game stats print on back.', designStory: 'Continuous grinding and leveling up in life and games.', fabric: '240 GSM Cotton', sizes: ['M', 'L', 'XL'], colors: ['Dark Slate'], stock: 14 }
+        ];
+
+        // 4 Banner Deals for Auto Carousel
+        const bannerDeals = [
+            {
+                badge: 'NEW ARRIVALS 2026',
+                title: 'Supreme Street & Cultural Prints',
+                desc: 'Get up to 60% OFF on anime, devotional, Telugu culture, and oversized streetwear collections.',
+                bgClass: 'from-indigo-600 via-purple-600 to-pink-600'
+            },
+            {
+                badge: 'CUSTOM STUDIO DROP',
+                title: 'Design Your Own T-Shirt',
+                desc: 'Upload graphics, add text, position prints & customize every detail in our Interactive Studio.',
+                bgClass: 'from-blue-700 via-indigo-700 to-purple-800'
+            },
+            {
+                badge: 'UNDER ₹199 STORE',
+                title: 'Budget Friendly Essentials',
+                desc: 'Amazing plain and minimalist tees starting from under ₹199.',
+                bgClass: 'from-amber-600 via-orange-600 to-red-600'
+            },
+            {
+                badge: 'KIDS & COUPLE SPECIAL',
+                title: 'Matching Outfits & Family Vibe',
+                desc: 'Exclusive couple tees and adorable kids collection drops starting at ₹399.',
+                bgClass: 'from-emerald-600 via-teal-700 to-cyan-800'
+            }
+        ];
+
+        // Visual Category Data with Thumbnail Images and Prices
+        const categoryData = [
+            { name: 'All', price: '24 Tees Available', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200' },
+            { name: 'Customize Your Own', price: 'Design Studio', image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=200' },
+            { name: 'Devotional', price: 'From ₹449', image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200' },
+            { name: 'Street Style', price: 'From ₹529', image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=200' },
+            { name: 'Cinema & Telugu', price: 'From ₹499', image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=200' },
+            { name: 'GenZ & Anime', price: 'From ₹499', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200' },
+            { name: 'Kids Special', price: 'From ₹349', image: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=200' },
+            { name: 'Music & Hip-Hop', price: 'From ₹499', image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=200' },
+            { name: 'Gaming', price: 'From ₹479', image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=200' }
+        ];
+
+        let cart = [];
+        let wishlist = [];
+        let addresses = [
+            { id: 1, name: 'Lakshmi', mobile: '9876543210', address: 'Flat 402, Cyber Towers, Hitec City', city: 'Hyderabad', state: 'Telangana', pincode: '500081', isDefault: true }
+        ];
+        let orders = [
+            { 
+                id: 'ORD-89231', 
+                date: '2026-04-10 14:32', 
+                total: 699, 
+                status: 'Out for Delivery', 
+                trackingRef: 'TRK-98123749',
+                estimatedDelivery: '2026-04-13',
+                shippedDate: '2026-04-11',
+                items: [{ title: 'Cyberpunk Oni Mask Oversized T-Shirt', size: 'L', price: 699, qty: 1, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600' }], 
+                address: 'Flat 402, Cyber Towers, Hitec City, Hyderabad - 500081' 
+            }
+        ];
+        
+        let currentUser = { name: 'Lakshmi', mobile: '9876543210', gender: 'Female', dob: '2002-05-15', language: 'en', role: 'admin' }; 
+        let currentView = 'home';
+        let selectedProduct = null;
+        let searchQuery = '';
+        let sortBy = 'popular';
+        let isRegisterMode = false;
+
+        // Filter State (Dropdown Multi-Criteria)
+        let filterCategory = 'All';
+        let filterFit = 'All';
+        let filterGender = 'All';
+        let filterSize = 'All';
+        let filterPrice = 'All';
+        let isFilterDropdownOpen = false;
+
+        // Custom Studio State
+        let studioColor = 'navy';
+        let studioSide = 'front';
+        let studioText = 'i love u';
+        let studioImageURL = '';
+        let studioFit = 'RegularFit';
+        let studioSize = 'M';
+
+        // Banner Carousel Index & Interval
+        let currentBannerIndex = 0;
+        let bannerTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderView();
+            updateBadges();
+            startBannerCarousel();
+            lucide.createIcons();
+        });
+
+        function startBannerCarousel() {
+            if (bannerTimer) clearInterval(bannerTimer);
+            bannerTimer = setInterval(() => {
+                currentBannerIndex = (currentBannerIndex + 1) % bannerDeals.length;
+                updateBannerUI();
+            }, 5000);
+        }
+
+        function changeBannerSlide(direction) {
+            if (direction === 'next') {
+                currentBannerIndex = (currentBannerIndex + 1) % bannerDeals.length;
+            } else {
+                currentBannerIndex = (currentBannerIndex - 1 + bannerDeals.length) % bannerDeals.length;
+            }
+            updateBannerUI();
+            startBannerCarousel();
+        }
+
+        function goToBannerSlide(idx) {
+            currentBannerIndex = idx;
+            updateBannerUI();
+            startBannerCarousel();
+        }
+
+        function updateBannerUI() {
+            const deal = bannerDeals[currentBannerIndex];
+            const bannerEl = document.getElementById('promoBanner');
+            if (!bannerEl) return;
+
+            bannerEl.className = `bg-gradient-to-r ${deal.bgClass} rounded-xl shadow-lg p-6 sm:p-10 text-white transition-all duration-700 ease-in-out relative overflow-hidden`;
+            bannerEl.querySelector('.banner-badge').innerText = deal.badge;
+            bannerEl.querySelector('.banner-title').innerText = deal.title;
+            bannerEl.querySelector('.banner-desc').innerText = deal.desc;
+
+            document.querySelectorAll('.banner-dot').forEach((dot, idx) => {
+                if (idx === currentBannerIndex) {
+                    dot.className = 'banner-dot w-6 h-2 bg-flipkartYellow rounded-full transition-all';
+                } else {
+                    dot.className = 'banner-dot w-2 h-2 bg-white/50 rounded-full hover:bg-white transition-all';
+                }
+            });
+        }
+
+        function scrollCategories(direction) {
+            const container = document.getElementById('categoryCarouselContainer');
+            if (!container) return;
+            const scrollAmount = 300;
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        function switchView(view, param) {
+            currentView = view;
+            if (param) selectedProduct = products.find(p => p.id === param);
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkAuthAndNavigate(view) {
+            if (!currentUser) {
+                alert('Please login to access your ' + view);
+                openLoginModal();
+                return;
+            }
+            switchView(view);
+        }
+
+        function renderView() {
+            const container = document.getElementById('mainContainer');
+            container.innerHTML = '';
+
+            if (currentView === 'home') container.innerHTML = renderHomePage();
+            else if (currentView === 'categories') container.innerHTML = renderCategoriesPage();
+            else if (currentView === 'search') container.innerHTML = renderSearchPage();
+            else if (currentView === 'productDetails') container.innerHTML = renderProductDetailsPage();
+            else if (currentView === 'wishlist') container.innerHTML = renderWishlistPage();
+            else if (currentView === 'orders') container.innerHTML = renderOrdersPage();
+            else if (currentView === 'profile') container.innerHTML = renderProfilePage();
+            else if (currentView === 'addresses') container.innerHTML = renderAddressesPage();
+            else if (currentView === 'settings') container.innerHTML = renderSettingsPage();
+            else if (currentView === 'checkout') container.innerHTML = renderCheckoutPage();
+            else if (currentView === 'admin') container.innerHTML = renderAdminDashboard();
+            else if (currentView === 'studio') container.innerHTML = renderStudioPage();
+
+            if (currentView === 'home') {
+                updateBannerUI();
+                startBannerCarousel();
+            }
+
+            lucide.createIcons();
+        }
+
+        // --- HOMEPAGE ---
+        function renderHomePage() {
+            const deal = bannerDeals[currentBannerIndex];
+            const filtered = products.filter(p => {
+                const matchCat = filterCategory === 'All' || p.category === filterCategory;
+                const matchFit = filterFit === 'All' || p.fit === filterFit;
+                const matchGender = filterGender === 'All' || p.gender === filterGender || p.gender === 'Unisex';
+                const matchSize = filterSize === 'All' || p.sizes.includes(filterSize);
+                
+                let matchPrice = true;
+                if (filterPrice === 'under199') matchPrice = p.price < 200;
+                else if (filterPrice === '200-500') matchPrice = p.price >= 200 && p.price <= 500;
+                else if (filterPrice === 'above500') matchPrice = p.price > 500;
+
+                const matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchFit && matchGender && matchSize && matchPrice && matchSearch;
+            }).sort((a, b) => {
+                if (sortBy === 'lowHigh') return a.price - b.price;
+                if (sortBy === 'highLow') return b.price - a.price;
+                if (sortBy === 'rating') return b.rating - a.rating;
+                return b.discount - a.discount;
+            });
+
+            return `
+                <!-- Auto-Rotating Banner Carousel (5s Timer) -->
+                <div id="promoBanner" class="bg-gradient-to-r ${deal.bgClass} rounded-xl shadow-lg p-6 sm:p-10 text-white relative mb-8 overflow-hidden group">
+                    <button onclick="changeBannerSlide('prev')" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition z-10">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <button onclick="changeBannerSlide('next')" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition z-10">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+
+                    <div class="space-y-3 max-w-xl text-center md:text-left mx-auto md:mx-0">
+                        <span class="banner-badge bg-flipkartYellow text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${deal.badge}</span>
+                        <h1 class="banner-title text-2xl sm:text-4xl font-extrabold tracking-tight min-h-[40px]">${deal.title}</h1>
+                        <p class="banner-desc text-indigo-100 text-xs sm:text-base min-h-[48px]">${deal.desc}</p>
+                        ${currentBannerIndex === 1 ? '<button onclick="switchView(\'studio\')" class="mt-2 bg-flipkartYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-amber-400">Launch Custom Studio</button>' : ''}
+                    </div>
+
+                    <div class="flex justify-center md:justify-start gap-2 mt-4">
+                        ${bannerDeals.map((_, idx) => `
+                            <button onclick="goToBannerSlide(${idx})" class="banner-dot ${idx === currentBannerIndex ? 'w-6 h-2 bg-flipkartYellow' : 'w-2 h-2 bg-white/50'} rounded-full transition-all"></button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Expandable Multi-Criteria Filter Dropdown Section (TOP POSITION) -->
+                <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+                    <div class="flex justify-between items-center cursor-pointer" onclick="isFilterDropdownOpen = !isFilterDropdownOpen; renderView();">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="filter" class="w-5 h-5 text-flipkartBlue"></i>
+                            <h3 class="font-bold text-sm sm:text-base text-gray-800">Filter</h3>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">Multi-Criteria</span>
+                        </div>
+                        <i data-lucide="${isFilterDropdownOpen ? 'chevron-up' : 'chevron-down'}" class="w-5 h-5 text-gray-600"></i>
+                    </div>
+
+                    <div id="filterDropdownBody" class="${isFilterDropdownOpen ? 'block' : 'hidden'} mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 text-xs">
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Category</label>
+                            <select onchange="filterCategory=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold focus:outline-none">
+                                <option value="All" ${filterCategory==='All'?'selected':''}>All Categories</option>
+                                <option value="Devotional" ${filterCategory==='Devotional'?'selected':''}>Devotional</option>
+                                <option value="Street Style" ${filterCategory==='Street Style'?'selected':''}>Street Style</option>
+                                <option value="Cinema & Telugu" ${filterCategory==='Cinema & Telugu'?'selected':''}>Cinema & Telugu</option>
+                                <option value="GenZ & Anime" ${filterCategory==='GenZ & Anime'?'selected':''}>GenZ & Anime</option>
+                                <option value="Kids Special" ${filterCategory==='Kids Special'?'selected':''}>Kids Special</option>
+                                <option value="Music & Hip-Hop" ${filterCategory==='Music & Hip-Hop'?'selected':''}>Music & Hip-Hop</option>
+                                <option value="Gaming" ${filterCategory==='Gaming'?'selected':''}>Gaming</option>
+                            </select>
+                        </div>
+
+                        <!-- Fit Filter -->
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Fit Type</label>
+                            <select onchange="filterFit=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold focus:outline-none">
+                                <option value="All" ${filterFit==='All'?'selected':''}>All Fits</option>
+                                <option value="Oversized" ${filterFit==='Oversized'?'selected':''}>Oversized</option>
+                                <option value="RegularFit" ${filterFit==='RegularFit'?'selected':''}>Regular Fit</option>
+                            </select>
+                        </div>
+
+                        <!-- Gender Filter -->
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Gender</label>
+                            <select onchange="filterGender=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold focus:outline-none">
+                                <option value="All" ${filterGender==='All'?'selected':''}>All Genders</option>
+                                <option value="Male" ${filterGender==='Male'?'selected':''}>Male</option>
+                                <option value="Female" ${filterGender==='Female'?'selected':''}>Female</option>
+                                <option value="Unisex" ${filterGender==='Unisex'?'selected':''}>Unisex</option>
+                            </select>
+                        </div>
+
+                        <!-- Size Filter -->
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Size</label>
+                            <select onchange="filterSize=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold focus:outline-none">
+                                <option value="All" ${filterSize==='All'?'selected':''}>All Sizes</option>
+                                <option value="S" ${filterSize==='S'?'selected':''}>Small (S)</option>
+                                <option value="M" ${filterSize==='M'?'selected':''}>Medium (M)</option>
+                                <option value="L" ${filterSize==='L'?'selected':''}>Large (L)</option>
+                                <option value="XL" ${filterSize==='XL'?'selected':''}>XL</option>
+                                <option value="XXL" ${filterSize==='XXL'?'selected':''}>XXL</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Filter -->
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Price Range</label>
+                            <select onchange="filterPrice=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold focus:outline-none">
+                                <option value="All" ${filterPrice==='All'?'selected':''}>All Prices</option>
+                                <option value="under199" ${filterPrice==='under199'?'selected':''}>Under ₹199</option>
+                                <option value="200-500" ${filterPrice==='200-500'?'selected':''}>₹200 - ₹500</option>
+                                <option value="above500" ${filterPrice==='above500'?'selected':''}>Above ₹500</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movable Category Carousel -->
+                <div class="relative bg-white rounded-xl shadow-md p-4 mb-8">
+                    <div class="flex justify-between items-center mb-3 px-1">
+                        <h2 class="text-base font-bold text-gray-800">Shop By Category & Custom Studio</h2>
+                        <div class="flex gap-1">
+                            <button onclick="scrollCategories('left')" class="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="scrollCategories('right')" class="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="categoryCarouselContainer" class="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth">
+                        ${categoryData.map(c => `
+                            <div onclick="${c.name === 'Customize Your Own' ? "switchView('studio')" : `filterCategory='${c.name}'; renderView();`}" class="flex-none w-28 sm:w-32 bg-gray-50 hover:bg-blue-50 border ${filterCategory === c.name ? 'border-flipkartBlue ring-2 ring-blue-400' : 'border-gray-200'} rounded-lg p-2 text-center cursor-pointer transition shadow-sm group">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full overflow-hidden mb-2 bg-gray-200 border">
+                                    <img src="${c.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" />
+                                </div>
+                                <h3 class="font-bold text-xs text-gray-800 truncate">${c.name}</h3>
+                                <span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded inline-block mt-1">${c.price}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Product Grid Sorting Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Printed T-Shirts (${filtered.length})</h2>
+                    <select onchange="sortBy=this.value; renderView();" class="px-3 py-2 bg-white border rounded text-xs font-semibold shadow-sm focus:outline-none">
+                        <option value="popular" ${sortBy==='popular'?'selected':''}>Sort by: Popularity</option>
+                        <option value="lowHigh" ${sortBy==='lowHigh'?'selected':''}>Price: Low to High</option>
+                        <option value="highLow" ${sortBy==='highLow'?'selected':''}>Price: High to Low</option>
+                        <option value="rating" ${sortBy==='rating'?'selected':''}>Highest Rated</option>
+                    </select>
+                </div>
+
+                <!-- Product Grid (Supports 24+ Items) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    ${filtered.length > 0 ? filtered.map(p => `
+                        <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden group flex flex-col justify-between">
+                            <div>
+                                <div class="relative overflow-hidden bg-gray-100 aspect-square cursor-pointer" onclick="switchView('productDetails', ${p.id})">
+                                    <img src="${p.image}" alt="${p.title}" class="object-cover w-full h-full group-hover:scale-105 transition duration-300" />
+                                    <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 p-1.5 bg-white/80 rounded-full hover:bg-white ${wishlist.includes(p.id) ? 'text-red-500' : 'text-gray-600'} transition shadow">
+                                        <i data-lucide="heart" class="w-4 h-4" ${wishlist.includes(p.id) ? 'fill="currentColor"' : ''}></i>
+                                    </button>
+                                    <span class="absolute bottom-2 left-2 bg-green-700 text-white text-xs px-2 py-0.5 rounded font-semibold flex items-center gap-1">
+                                        ${p.rating} <i data-lucide="star" class="w-3 h-3 fill-white"></i>
+                                    </span>
+                                </div>
+                                <div class="p-3">
+                                    <span class="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold">${p.category}</span>
+                                    <h3 class="font-medium text-xs sm:text-sm line-clamp-1 mt-1">${p.title}</h3>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="font-extrabold text-sm sm:text-base">₹${p.price}</span>
+                                        <span class="text-xs text-gray-400 line-through">₹${p.origPrice}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 pt-0">
+                                <button onclick="quickAddToCart(${p.id})" class="w-full bg-flipkartYellow hover:bg-amber-500 text-black font-semibold py-2 rounded text-xs sm:text-sm transition shadow-sm">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    `).join('') : '<p class="col-span-full text-center py-12 text-gray-500">No t-shirts found matching your filter criteria.</p>'}
+                </div>
+            `;
+        }
+
+        // --- CUSTOM DESIGN STUDIO PAGE ---
+        function renderStudioPage() {
+            const teeFill = studioColor === 'black' ? '#0f172a' : studioColor === 'navy' ? '#1e293b' : '#ffffff';
+            const teeStroke = studioColor === 'white' ? '#cbd5e1' : '#334155';
+            const textFill = studioColor === 'white' ? '#0f172a' : '#ffffff';
+
+            return `
+                <div class="max-w-5xl mx-auto space-y-6">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Interactive Custom T-Shirt Design Studio</h2>
+                            <p class="text-xs text-gray-500">Create your own custom printed t-shirt with real-time mockup preview.</p>
+                        </div>
+                        <button onclick="switchView('home')" class="text-flipkartBlue text-xs font-bold hover:underline">&larr; Back to Shop</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow border">
+                        <!-- Live T-Shirt Mockup Canvas (Full-Box Scaled Real T-Shirt) -->
+                        <div class="flex flex-col items-center justify-center bg-gray-100 p-4 sm:p-6 rounded-lg border relative min-h-[420px]">
+                            <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] px-2.5 py-0.5 rounded font-bold uppercase tracking-wide shadow z-20">LIVE ${studioSide.toUpperCase()} MOCKUP</span>
+                            
+                            <!-- Main Full T-Shirt Container -->
+                            <div class="w-full max-w-[340px] sm:max-w-[380px] aspect-square relative flex items-center justify-center">
+                                <!-- Realistic SVG T-Shirt Silhouette Background -->
+                                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-xl transition-all duration-300" style="filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));">
+                                    <path d="M 30,12 Q 40,20 50,20 Q 60,20 70,12 L 88,25 L 78,40 L 73,34 L 73,88 Q 73,92 68,92 L 32,92 Q 27,92 27,88 L 27,34 L 22,40 L 12,25 Z" 
+                                          fill="${teeFill}" 
+                                          stroke="${teeStroke}" 
+                                          stroke-width="1.5" 
+                                          stroke-linejoin="round" />
+                                </svg>
+
+                                <!-- Chest Print Zone Box Overlay -->
+                                <div class="absolute top-[28%] left-[27%] w-[46%] h-[48%] border-2 border-dashed ${studioColor === 'white' ? 'border-gray-400/60' : 'border-slate-400/50'} rounded-lg flex flex-col items-center justify-center p-2 text-center overflow-hidden z-10">
+                                    ${studioImageURL ? 
+                                        `<img src="${studioImageURL}" class="w-full h-full object-contain max-h-[75%] rounded shadow-sm transition-all duration-300" />` : 
+                                        `<i data-lucide="image" class="w-10 h-10 opacity-30 mb-1" style="color: ${textFill}"></i>`
+                                    }
+                                    <span class="text-xs sm:text-sm font-extrabold tracking-wide truncate w-full drop-shadow mt-1" style="color: ${textFill}">
+                                        ${studioText || 'Your Design Here'}
+                                    </span>
+                                    <span class="text-[9px] font-semibold opacity-70 mt-0.5 px-1.5 py-0.2 bg-black/20 text-white rounded">
+                                        ${studioFit} • Size ${studioSize}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Studio Controls -->
+                        <div class="space-y-4 text-xs">
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">1. Choose T-Shirt Color</label>
+                                <div class="flex gap-3">
+                                    <button onclick="studioColor='white'; renderView();" class="w-8 h-8 rounded-full bg-white border-2 ${studioColor==='white'?'border-flipkartBlue ring-2':'border-gray-300'} shadow"></button>
+                                    <button onclick="studioColor='black'; renderView();" class="w-8 h-8 rounded-full bg-gray-900 border-2 ${studioColor==='black'?'border-flipkartBlue ring-2':'border-transparent'} shadow"></button>
+                                    <button onclick="studioColor='navy'; renderView();" class="w-8 h-8 rounded-full bg-blue-900 border-2 ${studioColor==='navy'?'border-flipkartBlue ring-2':'border-transparent'} shadow"></button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">2. Print Side</label>
+                                <div class="flex gap-2">
+                                    <button onclick="studioSide='front'; renderView();" class="px-4 py-1.5 border rounded font-bold ${studioSide==='front'?'bg-flipkartBlue text-white':'bg-gray-100'}">Front Print</button>
+                                    <button onclick="studioSide='back'; renderView();" class="px-4 py-1.5 border rounded font-bold ${studioSide==='back'?'bg-flipkartBlue text-white':'bg-gray-100'}">Back Print</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">3. Custom Text / Quote</label>
+                                <input type="text" id="studioTextInput" oninput="studioText=this.value; renderView();" value="${studioText}" placeholder="Enter custom quote or typography..." class="w-full p-2.5 border rounded font-semibold text-sm focus:outline-none focus:border-flipkartBlue" />
+                            </div>
+
+                            <!-- LOCAL DEVICE FILE UPLOAD -->
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">4. Upload Graphic Image from Device</label>
+                                <input type="file" accept="image/*" onchange="handleStudioFileUpload(event)" class="w-full p-2 border rounded font-semibold text-xs text-gray-600 bg-gray-50 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-flipkartBlue file:text-white hover:file:bg-blue-600" />
+                                ${studioImageURL ? '<p class="text-[10px] text-green-600 font-bold mt-1">✓ Graphic file loaded & scaled on full t-shirt chest box</p>' : ''}
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-gray-700 mb-1">Fit Style</label>
+                                    <select onchange="studioFit=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold">
+                                        <option value="RegularFit" ${studioFit==='RegularFit'?'selected':''}>Regular Bio-Washed</option>
+                                        <option value="Oversized" ${studioFit==='Oversized'?'selected':''}>Oversized 240 GSM</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-gray-700 mb-1">Size</label>
+                                    <select onchange="studioSize=this.value; renderView();" class="w-full p-2 border rounded bg-gray-50 font-semibold">
+                                        <option value="S">Small (S)</option>
+                                        <option value="M" ${studioSize==='M'?'selected':''}>Medium (M)</option>
+                                        <option value="L" ${studioSize==='L'?'selected':''}>Large (L)</option>
+                                        <option value="XL" ${studioSize==='XL'?'selected':''}>XL</option>
+                                        <option value="XXL" ${studioSize==='XXL'?'selected':''}>XXL</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t flex items-center justify-between">
+                                <div>
+                                    <span class="text-sm font-bold text-gray-500">Custom Price:</span>
+                                    <span class="text-2xl font-extrabold text-gray-900 ml-2">₹799</span>
+                                </div>
+                                <button onclick="saveStudioDesignToCart()" class="bg-flipkartYellow hover:bg-amber-500 text-black font-bold px-6 py-3 rounded shadow-md text-sm transition transform active:scale-95">Save Design & Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleStudioFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    studioImageURL = e.target.result;
+                    renderView();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveStudioDesignToCart() {
+            const customItem = {
+                id: Date.now(),
+                title: `Custom ${studioFit} Tee (${studioSide.toUpperCase()} Print)`,
+                price: 799,
+                origPrice: 1299,
+                quantity: 1,
+                selectedSize: studioSize,
+                image: studioImageURL || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600'
+            };
+            cart.push(customItem);
+            updateBadges();
+            alert('Custom design saved and added to cart successfully!');
+            openCart();
+        }
+
+        // --- CATEGORIES PAGE ---
+        function renderCategoriesPage() {
+            return `
+                <h2 class="text-2xl font-bold mb-6">Explore All Categories & Studio</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    ${categoryData.map(c => `
+                        <div onclick="${c.name === 'Customize Your Own' ? "switchView('studio')" : `filterCategory='${c.name}'; switchView('home');`}" class="bg-white p-4 rounded-lg shadow hover:shadow-md cursor-pointer flex flex-col items-center text-center transition border hover:border-flipkartBlue">
+                            <img src="${c.image}" class="w-20 h-20 object-cover rounded-full mb-3 border" />
+                            <h3 class="font-bold text-sm text-gray-800">${c.name}</h3>
+                            <span class="text-xs text-green-600 font-bold mt-1">${c.price}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // --- SEARCH PAGE ---
+        function renderSearchPage() {
+            return `
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Search Products</h2>
+                    <input type="text" oninput="searchQuery=this.value; renderView();" placeholder="Type to search devotional, street style, anime..." class="w-full p-3 border rounded shadow-sm text-sm focus:outline-none focus:border-flipkartBlue" />
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                        ${products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase())).map(p => `
+                            <div onclick="switchView('productDetails', ${p.id})" class="bg-white p-3 rounded shadow cursor-pointer hover:shadow-md">
+                                <img src="${p.image}" class="aspect-square object-cover rounded mb-2 w-full" />
+                                <h4 class="font-medium text-xs line-clamp-1">${p.title}</h4>
+                                <p class="font-bold text-sm mt-1">₹${p.price}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- PRODUCT DETAILS PAGE ---
+        let selectedSize = 'M';
+        let qty = 1;
+
+        function renderProductDetailsPage() {
+            const p = selectedProduct || products[0];
+            return `
+                <button onclick="switchView('home')" class="mb-4 text-flipkartBlue font-semibold text-sm hover:underline flex items-center gap-1">&larr; Back to Products</button>
+                <div class="bg-white rounded-lg shadow-md p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <img src="${p.image}" class="w-full aspect-square object-cover rounded-lg shadow border" />
+                    </div>
+                    <div class="space-y-4">
+                        <span class="bg-flipkartBlue text-white text-xs px-2 py-0.5 rounded font-semibold uppercase">${p.category}</span>
+                        <h1 class="text-2xl font-bold text-gray-900">${p.title}</h1>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-green-700 text-white text-xs px-2 py-0.5 rounded font-semibold flex items-center gap-1">${p.rating} <i data-lucide="star" class="w-3 h-3 fill-white"></i></span>
+                            <span class="text-xs text-gray-500">Verified Customer Reviews</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl font-extrabold text-gray-900">₹${p.price}</span>
+                            <span class="text-base text-gray-500 line-through">₹${p.origPrice}</span>
+                            <span class="text-base text-green-600 font-bold">${p.discount}% off</span>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${p.description}</p>
+                        
+                        <div class="border-t pt-4 space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Select Size</label>
+                                <div class="flex gap-2">
+                                    ${p.sizes.map(s => `<button onclick="selectedSize='${s}'; renderView();" class="px-3 py-1.5 border rounded text-xs font-bold ${selectedSize===s?'border-flipkartBlue bg-blue-50 text-flipkartBlue':'border-gray-300'}">${s}</button>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded text-xs space-y-1 text-gray-600">
+                            <p><strong>Design Story:</strong> ${p.designStory}</p>
+                            <p><strong>Fabric Details:</strong> ${p.fabric}</p>
+                            <p><strong>Stock Status:</strong> <span class="text-green-600 font-bold">${p.stock > 0 ? 'In Stock (' + p.stock + ' available)' : 'Out of Stock'}</span></p>
+                        </div>
+
+                        <div class="flex gap-4 pt-2">
+                            <button onclick="addToCartDetailed(${p.id})" class="flex-1 bg-flipkartYellow hover:bg-amber-500 text-black font-bold py-3 rounded shadow text-sm transition">Add to Cart</button>
+                            <button onclick="addToCartDetailed(${p.id}); openCart();" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded shadow text-sm transition">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- WISHLIST PAGE ---
+        function renderWishlistPage() {
+            const items = products.filter(p => wishlist.includes(p.id));
+            return `
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">My Wishlist (${items.length})</h2>
+                    <button onclick="switchView('home')" class="text-flipkartBlue font-semibold text-sm hover:underline">&larr; Back to Shopping</button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    ${items.length > 0 ? items.map(p => `
+                        <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
+                            <div>
+                                <img src="${p.image}" class="aspect-square object-cover rounded mb-2 w-full" />
+                                <h3 class="font-medium text-sm line-clamp-1">${p.title}</h3>
+                                <p class="font-bold text-base mt-1">₹${p.price}</p>
+                            </div>
+                            <button onclick="moveWishlistToCart(${p.id})" class="mt-3 w-full bg-flipkartBlue text-white py-2 rounded text-xs font-semibold">Move to Cart</button>
+                        </div>
+                    `).join('') : '<p class="col-span-full text-center py-12 text-gray-500">Your wishlist is empty.</p>'}
+                </div>
+            `;
+        }
+
+        // --- PROFILE MANAGEMENT PAGE ---
+        function renderProfilePage() {
+            if (!currentUser) return `<div class="text-center py-12"><p>Please login to view profile.</p><button onclick="openLoginModal()" class="mt-3 bg-flipkartBlue text-white px-4 py-2 rounded text-sm">Login Now</button></div>`;
+            return `
+                <div class="max-w-2xl mx-auto bg-white rounded shadow p-6 space-y-6">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <h2 class="text-2xl font-bold">Profile Management</h2>
+                        <button onclick="handleLogout()" class="bg-red-50 text-red-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-100 transition flex items-center gap-1"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+                    </div>
+                    <form onsubmit="updateProfile(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Full Name</label>
+                            <input type="text" id="profName" value="${currentUser.name || ''}" class="w-full px-3 py-2 border rounded text-sm" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Mobile Number (Verified)</label>
+                            <input type="tel" value="${currentUser.mobile || ''}" disabled class="w-full px-3 py-2 border rounded text-sm bg-gray-100 text-gray-500 cursor-not-allowed" />
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">Gender</label>
+                                <select id="profGender" class="w-full px-3 py-2 border rounded text-sm">
+                                    <option value="Male" ${currentUser.gender==='Male'?'selected':''}>Male</option>
+                                    <option value="Female" ${currentUser.gender==='Female'?'selected':''}>Female</option>
+                                    <option value="Other" ${currentUser.gender==='Other'?'selected':''}>Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">Date of Birth</label>
+                                <input type="date" id="profDob" value="${currentUser.dob || ''}" class="w-full px-3 py-2 border rounded text-sm" />
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-flipkartBlue text-white font-bold py-2.5 px-6 rounded text-sm hover:bg-blue-600 transition">Save Changes</button>
+                    </form>
+                    <div class="border-t pt-4 space-y-2">
+                        <h3 class="font-bold text-base text-gray-800">Quick Account Options</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="switchView('orders')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-xs font-bold">My Orders & Tracking</button>
+                            <button onclick="switchView('addresses')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-xs font-bold">Saved Addresses</button>
+                            <button onclick="switchView('settings')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-xs font-bold">Language & Security</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateProfile(e) {
+            e.preventDefault();
+            currentUser.name = document.getElementById('profName').value;
+            currentUser.gender = document.getElementById('profGender').value;
+            currentUser.dob = document.getElementById('profDob').value;
+            alert('Profile updated successfully!');
+            renderView();
+            updateBadges();
+        }
+
+        // --- SAVED ADDRESSES PAGE ---
+        function renderAddressesPage() {
+            return `
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Saved Delivery Addresses</h2>
+                        <button onclick="addAddressPrompt()" class="bg-flipkartBlue text-white text-xs font-bold px-3 py-2 rounded">+ Add New Address</button>
+                    </div>
+                    <div class="space-y-3">
+                        ${addresses.map((a, i) => `
+                            <div class="bg-white p-4 rounded shadow border flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-sm">${a.name}</h4>
+                                        <span class="text-xs bg-gray-100 px-2 py-0.5 rounded">${a.mobile}</span>${a.isDefault ? '<span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded font-bold">DEFAULT</span>' : ''}
+                                    </div>
+                                    <p class="text-xs text-gray-600 mt-1">${a.address},${a.city}, ${a.state} - <strong>${a.pincode}</strong></p>
+                                </div>
+                                <button onclick="addresses.splice(${i}, 1); renderView();" class="text-red-500 hover:text-red-700 text-xs font-bold">Delete</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addAddressPrompt() {
+            const addr = prompt('Enter complete delivery address (Recipient, Locality, City, Pincode):');
+            if (addr) {
+                addresses.push({ id: Date.now(), name: currentUser?.name || 'Customer', mobile: currentUser?.mobile || '9999999999', address: addr, city: 'Hyderabad', state: 'Telangana', pincode: '500081', isDefault: false });
+                renderView();
+            }
+        }
+
+        // --- SETTINGS & LANGUAGE PAGE ---
+        function renderSettingsPage() {
+            return `
+                <div class="max-w-xl mx-auto bg-white rounded shadow p-6 space-y-6">
+                    <h2 class="text-2xl font-bold">Settings & Language Preferences</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Language Selection</label>
+                            <select onchange="currentUser.language=this.value; alert('Language updated to ' + this.value);" class="w-full px-3 py-2 border rounded text-sm">
+                                <option value="en" ${currentUser?.language==='en'?'selected':''}>English</option>
+                                <option value="te" ${currentUser?.language==='te'?'selected':''}>Telugu (తెలుగు)</option>
+                                <option value="hi" ${currentUser?.language==='hi'?'selected':''}>Hindi (हिन्दी)</option>
+                                <option value="mr" ${currentUser?.language==='mr'?'selected':''}>Marathi (మరాठी)</option>
+                                <option value="bn" ${currentUser?.language==='bn'?'selected':''}>Bengali (বাংলা)</option>
+                            </select>
+                        </div>
+                        <div class="border-t pt-4">
+                            <h3 class="font-bold text-sm mb-2">Password Modification</h3>
+                            <form onsubmit="event.preventDefault(); alert('Password successfully updated!');" class="space-y-3">
+                                <input type="password" placeholder="Current Password" required class="w-full px-3 py-2 border rounded text-sm" />
+                                <input type="password" placeholder="New Password" required class="w-full px-3 py-2 border rounded text-sm" />
+                                <button type="submit" class="bg-flipkartBlue text-white font-bold py-2 px-4 rounded text-xs">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ORDERS & TRACKING PAGE ---
+        function renderOrdersPage() {
+            return `
+                <h2 class="text-2xl font-bold mb-6">My Orders & Live Tracking</h2>
+                <div class="space-y-6">
+                    ${orders.length > 0 ? orders.map(o => `
+                        <div class="bg-white rounded-lg shadow p-6 space-y-4 border">
+                            <div class="flex flex-col sm:flex-row justify-between border-b pb-3">
+                                <div>
+                                    <span class="text-xs text-gray-500">Order ID: <strong>${o.id}</strong> \vert{} Tracking Ref: <strong>${o.trackingRef}</strong></span>
+                                    <p class="text-xs text-gray-500">Placed on: ${o.date}</p>
+                                </div>
+                                <div class="text-right mt-2 sm:mt-0">
+                                    <span class="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">${o.status}</span>
+                                    <p class="text-xs text-green-600 font-semibold mt-1">Expected Delivery: ${o.estimatedDelivery}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                ${o.items.map(i => `
+                                    <div class="flex gap-4 items-center border-b pb-3">
+                                        <img src="${i.image}" class="w-16 h-16 object-cover rounded border" />
+                                        <div class="flex-1 text-sm">
+                                            <h4 class="font-bold text-gray-800">${i.title}</h4>
+                                            <p class="text-xs text-gray-500">Size: ${i.selectedSize || i.size || 'M'} | Qty: ${i.quantity || i.qty}</p>
+                                            <p class="text-xs font-semibold text-gray-900 mt-1">₹${i.price * (i.quantity || i.qty)}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <!-- Detailed Tracking Timeline -->
+                            <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+                                <h4 class="text-xs font-bold uppercase text-gray-700">Tracking Progress Timeline</h4>
+                                <div class="grid grid-cols-6 text-center text-[10px] text-gray-500 font-semibold">
+                                    <div class="text-green-600 font-bold">&#10003;<br>Placed</div>
+                                    <div class="text-green-600 font-bold">&#10003;<br>Confirmed</div>
+                                    <div class="text-green-600 font-bold">&#10003;<br>Processing</div>
+                                    <div class="text-green-600 font-bold">&#10003;<br>Shipped</div>
+                                    <div class="text-blue-600 font-bold">&#8226;<br>Out for Delivery</div>
+                                    <div class="text-gray-400">&#9675;<br>Delivered</div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm gap-2">
+                                <span class="text-gray-600 text-xs">Deliver to: ${o.address}</span>
+                                <span class="font-extrabold text-base">Total Paid: ₹${o.total}</span>
+                            </div>
+                        </div>
+                    `).join('') : '<p class="text-center py-12 text-gray-500">No orders placed yet.</p>'}
+                </div>
+            `;
+        }
+
+        // --- CHECKOUT PROCESS ---
+        function renderCheckoutPage() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            return `
+                <h2 class="text-2xl font-bold mb-6">Checkout & Delivery</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-lg shadow p-6 space-y-6">
+                        <div>
+                            <h3 class="font-bold text-base mb-3 border-b pb-2">1. Delivery Address</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="text" id="chkName" placeholder="Recipient Name" value="${currentUser?.name || ''}" class="px-3 py-2 border rounded text-sm" />
+                                <input type="tel" id="chkPhone" placeholder="Contact Number" value="${currentUser?.mobile || ''}" class="px-3 py-2 border rounded text-sm" />
+                                <input type="text" id="chkAddress" placeholder="Address Line & Locality" class="sm:col-span-2 px-3 py-2 border rounded text-sm" />
+                                <input type="text" placeholder="City" value="Hyderabad" class="px-3 py-2 border rounded text-sm" />
+                                <input type="text" placeholder="PIN Code" value="500081" class="px-3 py-2 border rounded text-sm" />
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base mb-3 border-b pb-2">2. Payment Method</h3>
+                            <div class="space-y-2 text-sm">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="pay" checked /> Razorpay Secure Online Payment (UPI / Cards / NetBanking)</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="pay" /> Cash on Delivery (COD)</label>
+                            </div>
+                        </div>
+                        <button onclick="placeOrder()" class="w-full bg-flipkartYellow hover:bg-amber-500 text-black font-bold py-3 rounded shadow transition">Place Order Now</button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 h-fit space-y-4">
+                        <h3 class="font-bold text-base border-b pb-2">Order Summary</h3>
+                        <div class="space-y-2 text-sm max-h-60 overflow-y-auto">
+                            ${cart.map(c => `<div class="flex justify-between"><span>${c.title} (x${c.quantity})</span><span>₹${c.price * c.quantity}</span></div>`).join('')}
+                        </div>
+                        <div class="border-t pt-3 space-y-1 text-sm">
+                            <div class="flex justify-between"><span>Subtotal</span><span>₹${subtotal}</span></div>
+                            <div class="flex justify-between"><span>Delivery Charges</span><span class="text-green-600 font-semibold">FREE</span></div>
+                            <div class="flex justify-between font-bold text-base pt-2 border-t"><span>Final Payable</span><span>₹${subtotal}</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ADMIN DASHBOARD ---
+        function renderAdminDashboard() {
+            return `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Admin Management Dashboard</h2>
+                        <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded font-bold">Role: Administrator</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded shadow border-l-4 border-blue-600">
+                            <h4 class="text-xs text-gray-500 font-bold uppercase">Total Revenue</h4>
+                            <p class="text-2xl font-extrabold mt-1">₹14,290</p>
+                        </div>
+                        <div class="bg-white p-5 rounded shadow border-l-4 border-green-600">
+                            <h4 class="text-xs text-gray-500 font-bold uppercase">Total Orders</h4>
+                            <p class="text-2xl font-extrabold mt-1">${orders.length}</p>
+                        </div>
+                        <div class="bg-white p-5 rounded shadow border-l-4 border-purple-600">
+                            <h4 class="text-xs text-gray-500 font-bold uppercase">Active Products</h4>
+                            <p class="text-2xl font-extrabold mt-1">${products.length}</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded shadow p-6">
+                        <h3 class="font-bold text-lg mb-4">Manage Products & Inventory</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <tr class="bg-gray-100 border-b">
+                                    <th class="p-3">Title</th>
+                                    <th class="p-3">Category</th>
+                                    <th class="p-3">Price</th>
+                                    <th class="p-3">Stock</th>
+                                    <th class="p-3">Actions</th>
+                                </tr>
+                                ${products.map(p => `
+                                    <tr class="border-b">
+                                        <td class="p-3 font-medium">${p.title}</td>
+                                        <td class="p-3 text-xs text-gray-600">${p.category}</td>
+                                        <td class="p-3 font-bold">₹${p.price}</td>
+                                        <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-bold">${p.stock} units</span></td>
+                                        <td class="p-3"><button onclick="alert('Product inventory updated!')" class="text-flipkartBlue hover:underline text-xs font-bold">Edit Stock</button></td>
+                                    </tr>
+                                `).join('')}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CART & WISHLIST LOGIC ---
+        function quickAddToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const item = cart.find(i => i.id === productId && i.selectedSize === 'M');
+            if (item) item.quantity += 1;
+            else cart.push({ ...product, quantity: 1, selectedSize: 'M' });
+            updateBadges();
+            openCart();
+        }
+
+        function addToCartDetailed(productId) {
+            const product = products.find(p => p.id === productId);
+            const item = cart.find(i => i.id === productId && i.selectedSize === selectedSize);
+            if (item) item.quantity += qty;
+            else cart.push({ ...product, quantity: qty, selectedSize });
+            updateBadges();
+        }
+
+        function updateBadges() {
+            const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+            document.getElementById('cartCountMobile').innerText = total;
+            document.getElementById('cartCountDesktop').innerText = total;
+            document.getElementById('wishlistCountDesktop').innerText = wishlist.length;
+
+            if (currentUser) {
+                document.getElementById('desktopAccountName').innerText = currentUser.name.split(' ')[0];
+                document.getElementById('desktopAuthActionDropdown').innerHTML = `
+                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs font-bold text-red-600 flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+                `;
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminNavBtn').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('desktopAccountName').innerText = 'Login';
+                document.getElementById('desktopAuthActionDropdown').innerHTML = `
+                    <button onclick="openLoginModal()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-xs font-bold text-flipkartBlue">Login / Register</button>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function openCart() {
+            const container = document.getElementById('cartItemsContainer');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const totalEl = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-10">Your cart is empty.</p>';
+                subtotalEl.innerText = '₹0';
+                totalEl.innerText = '₹0';
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="flex gap-3 items-center border-b pb-3">
+                        <img src="${item.image}" class="w-14 h-14 object-cover rounded" />
+                        <div class="flex-1 text-sm">
+                            <h4 class="font-medium line-clamp-1">${item.title}</h4>
+                            <p class="text-xs text-gray-500">Size: ${item.selectedSize} | ₹${item.price}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <button onclick="cart[${idx}].quantity = Math.max(1, cart[${idx}].quantity - 1); updateBadges(); openCart();" class="px-2 bg-gray-200 text-xs font-bold rounded">-</button>
+                                <span class="text-xs font-semibold">${item.quantity}</span>
+                                <button onclick="cart[${idx}].quantity += 1; updateBadges(); openCart();" class="px-2 bg-gray-200 text-xs font-bold rounded">+</button>
+                            </div>
+                        </div>
+                        <button onclick="cart.splice(${idx}, 1); updateBadges(); openCart();" class="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+                    </div>
+                `).join('');
+                const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+                subtotalEl.innerText = `₹${subtotal}`;
+                totalEl.innerText = `₹${subtotal}`;
+            }
+            document.getElementById('cartDrawer').classList.remove('hidden');
+        }
+
+        function closeCart() {
+            document.getElementById('cartDrawer').classList.add('hidden');
+        }
+
+        function toggleWishlist(id) {
+            const idx = wishlist.indexOf(id);
+            if (idx > -1) wishlist.splice(idx, 1);
+            else wishlist.push(id);
+            updateBadges();
+            renderView();
+        }
+
+        function moveWishlistToCart(id) {
+            toggleWishlist(id);
+            quickAddToCart(id);
+        }
+
+        function proceedToCheckout() {
+            if (!currentUser) {
+                alert('Please login or register to complete your order.');
+                openLoginModal();
+                return;
+            }
+            closeCart();
+            switchView('checkout');
+        }
+
+        function placeOrder() {
+            const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            const newOrder = {
+                id: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
+                trackingRef: 'TRK-' + Math.floor(10000000 + Math.random() * 90000000),
+                date: new Date().toISOString().slice(0, 10) + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                total: subtotal,
+                status: 'Confirmed',
+                estimatedDelivery: '2026-04-16',
+                shippedDate: 'Pending',
+                items: [...cart],
+                address: document.getElementById('chkAddress')?.value || 'Hyderabad, India'
+            };
+            orders.unshift(newOrder);
+            cart = [];
+            updateBadges();
+            alert('Order placed successfully!');
+            switchView('orders');
+        }
+
+        // --- AUTHENTICATION MODAL LOGIC ---
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('loginModalTitle').innerText = isRegisterMode ? 'Create New Account' : 'Mobile Login / Register';
+            document.getElementById('nameFieldContainer').classList.toggle('hidden', !isRegisterMode);
+            document.getElementById('authSubmitBtn').innerText = isRegisterMode ? 'Register' : 'Login';
+            document.getElementById('authSwitchText').innerText = isRegisterMode ? 'Existing user? Login here' : "New to Grookfit? Create an account";
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const mobile = document.getElementById('authMobile').value;
+            const name = isRegisterMode ? document.getElementById('authName').value : 'Lakshmi';
+            
+            currentUser = { name, mobile, gender: 'Female', dob: '2000-01-01', language: 'en', role: mobile === '9999999999' ? 'admin' : 'customer' };
+            updateBadges();
+            closeLoginModal();
+            alert(`Welcome back, ${currentUser.name}!`);
+            renderView();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            updateBadges();
+            switchView('home');
+            alert('Logged out successfully.');
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            if (currentView !== 'home') switchView('home');
+            else renderView();
+        }
+    </script>
+</body>
+</html>
